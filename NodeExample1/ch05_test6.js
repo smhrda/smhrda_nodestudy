@@ -1,5 +1,5 @@
-/* 간단한 웹서버 만들기 5 */
-/* 클라이언트에서 요청이 있을 때 파일 읽어 응답하기 */
+/* 간단한 웹서버 만들기 6 */
+/* 파일을 스트림으로 읽어 응답 보내기 */
 var http = require("http");
 var fs = require("fs");
 
@@ -24,11 +24,10 @@ server.on("request", function (req, res) {
   console.log("클라이언트 요청이 들어왔습니다.");
 
   var filename = "coffee.png";
-  fs.readFile(filename, function (err, data) {
-    res.writeHead(200, { "Content-Type": "image/png" }); // 이미지 데이터임을 표시
-    res.write(data);
-    res.end();
-  });
+  var infile = fs.createReadStream(filename, { flags: "r" });
+
+  // 파이프로 연결하여 알아서 처리하도록 설정하기
+  infile.pipe(res);
 });
 
 // 서버 종료 이벤트 처리
